@@ -8,8 +8,8 @@ namespace HotBall
     {
         [SerializeField] private List<Player> players;
         [SerializeField] private Vector3 offset;
-        [SerializeField] private float speed = 4;
-        [SerializeField] private float inertiaDistance = 1;
+        [SerializeField] private float speed = 5;
+        [SerializeField] private float inertiaDistance = 2;
 
         private void Start()
         {
@@ -18,15 +18,18 @@ namespace HotBall
 
         private void FixedUpdate()
         {
-            var currentPosition = transform.position;
-            var delta = GetTargetPosition() - currentPosition;
-            var magnitude = delta.magnitude;
-            var length = speed * Time.fixedDeltaTime;
-            delta = Vector3.ClampMagnitude(delta, length);
-            if (magnitude < inertiaDistance)
-                delta *= magnitude / inertiaDistance;
+            transform.position += CalcDelta();
+        }
 
-            transform.position = currentPosition + delta;
+        private Vector3 CalcDelta()
+        {
+            var delta = GetTargetPosition() - transform.position;
+            var magnitude = delta.magnitude;
+            var maxLength = speed * Time.fixedDeltaTime;
+            delta = Vector3.ClampMagnitude(delta, maxLength);
+            if (magnitude < inertiaDistance) delta *= magnitude / inertiaDistance;
+            
+            return delta;
         }
 
         private Vector3 GetTargetPosition()

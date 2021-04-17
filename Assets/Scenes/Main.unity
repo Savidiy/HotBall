@@ -1239,7 +1239,7 @@ MonoBehaviour:
   - {fileID: 1309479712}
   offset: {x: 0, y: 10, z: 0}
   speed: 5
-  inertiaDistance: 2
+  inertiaDistance: 1
 --- !u!1 &973542728
 GameObject:
   m_ObjectHideFlags: 0
@@ -2336,7 +2336,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1601816512}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1, y: 0.99999976, z: -7.000004}
+  m_LocalPosition: {x: -1, y: 0.99999976, z: -7}
   m_LocalScale: {x: 1, y: 2, z: 8.999886}
   m_Children: []
   m_Father: {fileID: 1539556622}
