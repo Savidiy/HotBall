@@ -1,20 +1,51 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HotBall
 {
-    internal class CameraController : MonoBehaviour
+    public sealed class CameraController : MonoBehaviour
     {
-        [SerializeField] private Player player;
-        private Vector3 _offset;
+        [SerializeField] private List<Player> players;
+        [SerializeField] private Vector3 offset;
+        [SerializeField] private float speed = 4;
+        [SerializeField] private float inertiaDistance = 1;
 
         private void Start()
         {
-            _offset = transform.position - player.transform.position;
+            transform.position = GetTargetPosition();
         }
 
-        private void LateUpdate()
+        private void FixedUpdate()
         {
-            transform.position = player.transform.position + _offset;
+            var currentPosition = transform.position;
+            var delta = GetTargetPosition() - currentPosition;
+            var magnitude = delta.magnitude;
+            var length = speed * Time.fixedDeltaTime;
+            delta = Vector3.ClampMagnitude(delta, length);
+            if (magnitude < inertiaDistance)
+                delta *= magnitude / inertiaDistance;
+
+            transform.position = currentPosition + delta;
+        }
+
+        private Vector3 GetTargetPosition()
+        {
+            var targetPosition = new Vector3();
+            var playerCount = 0;
+            foreach (var player in players)
+            {
+                if (player == null) continue;
+                targetPosition += player.transform.position;
+                playerCount++;
+            }
+
+            if (playerCount > 0)
+                targetPosition /= playerCount;
+            
+            targetPosition += offset;
+            
+            return targetPosition;
         }
     }
 }

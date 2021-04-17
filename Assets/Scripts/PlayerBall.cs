@@ -1,4 +1,5 @@
-﻿namespace HotBall
+﻿
+namespace HotBall
 {
     public sealed class PlayerBall : Player
     {
