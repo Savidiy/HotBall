@@ -27,6 +27,10 @@ namespace HotBall
                     _horizontalAxis = "HorizontalJoystick";
                     _verticalAxis = "VerticalJoystick";
                     break;
+                case InputSettings.Mouse:
+                    _horizontalAxis = "Mouse X";
+                    _verticalAxis = "Mouse Y";
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException("Forgot to add settings");
             }
@@ -47,6 +51,7 @@ namespace HotBall
     {
         Wasd,
         Arrows,
-        Joystick
+        Joystick,
+        Mouse
     }
 }
