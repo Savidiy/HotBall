@@ -10,14 +10,15 @@ namespace HotBall
         [SerializeField] private InputSettings inputSettings = InputSettings.Wasd;
         private string _verticalAxis;
         private string _horizontalAxis;
+        private Inventory _inventory;
 
         private void Start()
         {
             switch (inputSettings)
             {
                 case InputSettings.Wasd:
-                    _horizontalAxis = "HorizontalWASD";
-                    _verticalAxis = "VerticalWASD";
+                    _horizontalAxis = "Horizontal";
+                    _verticalAxis = "Vertical";
                     break;
                 case InputSettings.Arrows:
                     _horizontalAxis = "HorizontalArrows";
@@ -45,13 +46,16 @@ namespace HotBall
             
             rigidbody.AddForce(movement * speed);
         }
-    }
 
-    public enum InputSettings
-    {
-        Wasd,
-        Arrows,
-        Joystick,
-        Mouse
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent<ICollectableItem>(out var collectable))
+            {
+                var item = collectable.GiveMeItem();
+                GameController.Inventory.AddItem(item);
+            }
+            
+            if (other.TryGetComponent<InteractiveObject>(out var obj)) obj.Interaction();
+        }
     }
 }

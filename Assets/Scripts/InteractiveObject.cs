@@ -1,15 +1,10 @@
-﻿namespace HotBall
-{
-    public abstract class InteractiveObject
-    {
-        protected abstract void Interaction();
-    }
+﻿using System;
+using UnityEngine;
 
-    public sealed class GoodBonus : InteractiveObject
+namespace HotBall
+{
+    public abstract class InteractiveObject : MonoBehaviour
     {
-        protected override void Interaction()
-        {
-            // Add bonus
-        }
+        public abstract void Interaction();
     }
 }
