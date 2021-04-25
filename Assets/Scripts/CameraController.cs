@@ -16,7 +16,7 @@ namespace HotBall
             transform.position = GetTargetPosition();
         }
 
-        private void FixedUpdate()
+        public void FixedTick()
         {
             transform.position += CalcDelta();
         }

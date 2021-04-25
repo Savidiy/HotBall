@@ -1,50 +1,78 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace HotBall
 {
-    public class Player : MonoBehaviour
+    public sealed class Player : MonoBehaviour
     {
-        [SerializeField] private float speed = 3.0f;
         [SerializeField] private new Rigidbody rigidbody;
-        [SerializeField] private InputSettings inputSettings = InputSettings.Wasd;
-        private string _verticalAxis;
-        private string _horizontalAxis;
-        private Inventory _inventory;
+        [SerializeField] private InputSetup startInputSetup;
+        private readonly List<AbstractState> _states = new List<AbstractState>();
+        private readonly List<AbstractData> _dataList = new List<AbstractData>();
+        private const float MAX_HP = 100f;
+        private float _hp = MAX_HP;
 
         private void Start()
         {
-            switch (inputSettings)
+             _states.Add(new InputState(startInputSetup));
+        }
+
+        public void UpdateTick(float deltaTime)
+        {
+            if (Input.GetKeyDown(KeyCode.K)) // todo debug speedlost
             {
-                case InputSettings.Wasd:
-                    _horizontalAxis = "Horizontal";
-                    _verticalAxis = "Vertical";
-                    break;
-                case InputSettings.Arrows:
-                    _horizontalAxis = "HorizontalArrows";
-                    _verticalAxis = "VerticalArrows";
-                    break;
-                case InputSettings.Joystick:
-                    _horizontalAxis = "HorizontalJoystick";
-                    _verticalAxis = "VerticalJoystick";
-                    break;
-                case InputSettings.Mouse:
-                    _horizontalAxis = "Mouse X";
-                    _verticalAxis = "Mouse Y";
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("Forgot to add settings");
+                _states.Add(new SpeedChangeState(3, 0.7f));
+            }
+            
+            UpdateStates(deltaTime);
+            ClearStates();
+            GenerateDataStates();
+            ModifyDataStates();
+        }
+
+        private void ModifyDataStates()
+        {
+            foreach (var state in _states) state.ModifyData(_dataList);
+        }
+
+        private void GenerateDataStates()
+        {
+            foreach (var state in _states) _dataList.AddRange(state.AddData());
+        }
+
+        private void ClearStates()
+        {
+            for (var i = 0; i < _states.Count;)
+            {
+                if (_states[i].IsNeedDelete())
+                    _states.RemoveAt(i);
+                else
+                    i++;
             }
         }
 
-        protected void Move()
+        private void UpdateStates(float deltaTime)
         {
-            var moveHorizontal = Input.GetAxis(_horizontalAxis);
-            var moveVertical = Input.GetAxis(_verticalAxis);
+            foreach (var state in _states) state.UpdateTick(deltaTime);
+        }
 
-            var movement = new Vector3(moveHorizontal, 0f, moveVertical);
-            
-            rigidbody.AddForce(movement * speed);
+        public void FixedTick()
+        {
+            for (var i = _dataList.Count - 1; i >= 0; i--)
+            {
+                var data = _dataList[i];
+                if (data is InputData inputData)
+                {
+                    Move(inputData.Movement);
+                    _dataList.RemoveAt(i);
+                    continue;
+                }
+            }
+        }
+
+        private void Move(Vector3 inputDataMovement)
+        {
+            rigidbody.AddForce(inputDataMovement);
         }
 
         private void OnTriggerEnter(Collider other)
