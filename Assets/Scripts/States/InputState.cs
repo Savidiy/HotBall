@@ -3,22 +3,22 @@ using UnityEngine;
 
 namespace HotBall
 {
-    public class InputState : AbstractState
+    public class Input : AbstractState, IStateThatAddData
     {
         private readonly InputSetup _inputSetup;
 
-        public InputState(InputSetup inputSetup)
+        public Input(InputSetup inputSetup)
         {
             _inputSetup = inputSetup;
         }
 
-        public override IEnumerable<AbstractData> AddData()
+        public IEnumerable<AbstractData> AddData(float deltaTime)
         {
-            var moveHorizontal = Input.GetAxis(_inputSetup.HorizontalAxis);
-            var moveVertical = Input.GetAxis(_inputSetup.VerticalAxis);
+            var moveHorizontal = UnityEngine.Input.GetAxis(_inputSetup.HorizontalAxis);
+            var moveVertical = UnityEngine.Input.GetAxis(_inputSetup.VerticalAxis);
 
             var movement = new Vector3(moveHorizontal, 0f, moveVertical);
-            movement *= _inputSetup.Speed;
+            movement *= _inputSetup.Speed * deltaTime;
 
             var data = new InputData(movement);
             return new AbstractData[] {data};

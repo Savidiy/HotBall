@@ -2,11 +2,11 @@
 
 namespace HotBall
 {
-    public class DeadState : AbstractState
+    public class Dead : AbstractState, IStateThatModifyData
     {
-        public override void ModifyData(List<AbstractData> dataList)
+        public void ModifyData(List<AbstractData> dataList)
         {
-            for (int i = dataList.Count - 1; i >= 0; i--)
+            for (var i = dataList.Count - 1; i >= 0; i--)
             {
                 var data = dataList[i];
                 if (data is InputData)
