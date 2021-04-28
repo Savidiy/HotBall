@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HorizontalAxis: Horizontal
   VerticalAxis: Vertical
-  Speed: 50
+  Speed: 25000
