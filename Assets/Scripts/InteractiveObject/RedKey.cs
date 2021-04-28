@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace HotBall
@@ -10,7 +9,7 @@ namespace HotBall
         
         private bool _wasCollected;
         private const float DELETE_DURATION = 0.5f;
-        private float _timer = DELETE_DURATION;
+        private float _deleteTimer = DELETE_DURATION;
         private const float SPEED_ROTATION = 20f;
         private Vector3 _beginScale;
         private AudioSource _audioSource;
@@ -25,26 +24,28 @@ namespace HotBall
         {
             _audioSource.PlayOneShot(collectSound);
             _wasCollected = true;
-            _timer = DELETE_DURATION;
+            _deleteTimer = DELETE_DURATION;
         }
         
         public Item GiveMeItem()
         {
-            if (_wasCollected) return new Item(ItemType.NONE);
-            return new Item(ItemType.RED_KEY);
+            return _wasCollected ? new Item(ItemType.NONE) : new Item(ItemType.RED_KEY);
         }
 
         public void Animate()
         {
             transform.Rotate(Vector3.up, SPEED_ROTATION * Time.deltaTime, Space.World);
             
-            if (!_wasCollected) return;
-            
-            _timer -= Time.deltaTime;
-            var progress = _timer / DELETE_DURATION;
+            if (_wasCollected) DeleteCheck();
+        }
+        
+        private void DeleteCheck()
+        {
+            _deleteTimer -= Time.deltaTime;
+            var progress = _deleteTimer / DELETE_DURATION;
             transform.localScale = _beginScale * progress;
 
-            if (_timer < 0) Destroy(gameObject);
+            if (_deleteTimer < 0) Destroy(gameObject);
         }
 
         public void SetAudioSource(AudioSource audioSource)

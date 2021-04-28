@@ -4,22 +4,26 @@ namespace HotBall
 {
     public abstract class AbstractState
     {
-        public virtual void UpdateTick(float deltaTime)
-        {
-        }
+        
+    }
 
-        public virtual IEnumerable<AbstractData> AddData()
-        {
-            return new AbstractData[0];
-        }
+    public interface IStateThatNeedToBeUpdated
+    {
+        void UpdateTick(float deltaTime);
+    }
 
-        public virtual void ModifyData(List<AbstractData> dataList)
-        {
-        }
+    public interface IStateThatAddData
+    {
+        IEnumerable<AbstractData> AddData(float deltaTime);
+    }
 
-        public virtual bool IsNeedDelete()
-        {
-            return false;
-        }
+    public interface IStateThatModifyData
+    {
+        void ModifyData(List<AbstractData> dataList);
+    }
+
+    public interface IStateThatCheckDelete
+    {
+        bool IsNeedDelete();
     }
 }

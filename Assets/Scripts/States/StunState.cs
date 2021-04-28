@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HotBall
 {
-    public sealed class StunState : AbstractState
+    public sealed class StunState : AbstractState, IStateThatNeedToBeUpdated, IStateThatModifyData, IStateThatCheckDelete
     {
         private float _duration;
         
@@ -12,12 +12,12 @@ namespace HotBall
             _duration = duration;
         }
         
-        public override void UpdateTick(float deltaTime)
+        public void UpdateTick(float deltaTime)
         {
             _duration -= deltaTime;
         }
 
-        public override void ModifyData(List<AbstractData> dataList)
+        public void ModifyData(List<AbstractData> dataList)
         {
             for (int i = dataList.Count - 1; i >= 0; i--)
             {
@@ -29,7 +29,7 @@ namespace HotBall
             }
         }
 
-        public override bool IsNeedDelete()
+        public bool IsNeedDelete()
         {
             return _duration < 0;
         }
