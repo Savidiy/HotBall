@@ -7,7 +7,7 @@ namespace HotBall
 {
     public sealed class Player : MonoBehaviour
     {
-        [SerializeField] private new Rigidbody rigidbody;
+        [SerializeField] private Rigidbody rigidbodyPlayer;
         [SerializeField] private InputSetup startInputSetup;
         private readonly List<AbstractState> _states = new List<AbstractState>();
         private readonly List<AbstractData> _dataList = new List<AbstractData>();
@@ -99,7 +99,7 @@ namespace HotBall
 
         private void Move(Vector3 inputDataMovement)
         {
-            rigidbody.AddForce(inputDataMovement);
+            rigidbodyPlayer.AddForce(inputDataMovement);
         }
 
         private void OnTriggerEnter(Collider other)
